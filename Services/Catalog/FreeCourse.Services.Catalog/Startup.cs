@@ -1,15 +1,12 @@
+using FreeCourse.Services.Catalog.Services;
+using FreeCourse.Services.Catalog.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FreeCourse.Services.Catalog
 {
@@ -22,9 +19,24 @@ namespace FreeCourse.Services.Catalog
 		public IConfiguration Configuration { get; }
 
 		// This method gets called by the runtime. Use this method to add services to the container.
-		public void ConfigureServices(IServiceCollection services) {
-
+		public void ConfigureServices(IServiceCollection services)
+		{
+			//contructorda ýcategoryservisle karþýlaþtýðýnda bana dolu bir categoryservice getir demek.
+			services.AddScoped<ICategoryService, CategoryService>();
+			services.AddScoped<ICourseService, CourseService>();
+			services.AddAutoMapper(typeof(Startup));
 			services.AddControllers();
+
+			//options pattern demek bu þuan herhangi bir class constructýrýnda  bu bilgileri okuyabiliriz
+			//IOptions<DatabaseSettings> options diyerek
+			services.Configure<DatabaseSettings>(Configuration.GetSection("DatabaseSettings"));
+
+			//herhangi bir class constructorýnda IDatabaseSettings geçerse dolu bir  DatabaseSettings bunun deðerini vericek o da yukarý satýrdan okuyor deðerleri.
+			services.AddSingleton<IDatabaseSettings>(sp => 
+			{
+				return sp.GetRequiredService<IOptions<DatabaseSettings>>().Value; //GetRequiredService ilgili servisi bulamazsa hata fýrlatýr.
+			});
+
 			services.AddSwaggerGen(c => {
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "FreeCourse.Services.Catalog", Version = "v1" });
 			});

@@ -10,6 +10,7 @@ namespace FreeCourse.Services.Catalog.Models
 		[BsonRepresentation(BsonType.ObjectId)] //tipinide işaretlenmesi lazım. dönüşümleri bu yapıcak.
 		public string Id { get; set; }
 		public string Name { get; set; } //kursun ismi
+		public string Description { get; set; } //kursun açıklaması
 
 		[BsonRepresentation(BsonType.Decimal128)]
 		public decimal Price { get; set; }
@@ -17,10 +18,10 @@ namespace FreeCourse.Services.Catalog.Models
 
 		[BsonRepresentation(BsonType.DateTime)]
 		public DateTime CreatedTime { get; set; } //oluşturulma tarihi
-		public string UserId { get; set; } // her bir kurs bir kullanıcıya ait sonuçta
+		public string UserId { get; set; } // her bir kurs bir kullanıcıya ait sonuçta,string tutmak güvenlik açısından daha güvenli
 		public Feature Feature { get; set; } 
 
-		[BsonRepresentation(BsonType.ObjectId)]  //mongo dbye  hangi property ne iş yapıcak onu belirtmek için.
+		[BsonRepresentation(BsonType.ObjectId)]  //mongo dbye  hangi property ne iş yapıcak onu belirtmek için. category içindeki id ne tiple temsil ediliyorsa aynı olmalı.
 		public string CategoryId { get; set; }
 
 		[BsonIgnore]
